@@ -1,0 +1,43 @@
+{
+    "0.37": {
+        "kW": "0.37",
+        "HP": "0.5",
+        "FLC_Star": "1.2 A",
+        "FLC_Delta": "2.1 A",
+        "MPCB": {
+            "Primary": {
+                "ABB": "MS132-1.6 (1.0-1.6A)",
+                "Siemens": "3RV2011-1DA10 (1.0-1.6A)",
+                "L&T": "MS16 (1.0-1.6A)",
+                "Schneider": "GV2ME02 (1.0-1.6A)"
+            },
+            "Next": {
+                "ABB": "MS132-2.5 (1.6-2.5A)",
+                "Siemens": "3RV2011-1EA10 (1.6-2.5A)",
+                "L&T": "MS16 (1.6-2.5A)",
+                "Schneider": "GV2ME03 (1.6-2.5A)"
+            }
+        },
+        "Contactor": {
+            "ABB": "AF09-30-10 (9A)",
+            "Siemens": "3RT2015-1BB41 (9A)",
+            "L&T": "MNX-9 (9A)"
+        },
+        "MCCB": "ABB S203-C06",
+        "Cable": {
+            "Al": "4C x 1.5 mm\u00b2",
+            "Cu": "4C x 1.0 mm\u00b2"
+        },
+        "Cable_Gland": "20 mm",
+        "Bearing": {
+            "ABB": {
+                "DE": "6201",
+                "NDE": "6201"
+            },
+            "Siemens": {
+                "DE": "6201-ZZ",
+                "NDE": "6201-ZZ"
+            }
+        }
+    }
+}
