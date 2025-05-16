@@ -1,0 +1,34 @@
+{
+  "0.37": {
+    "HP": "0.5",
+    "FLC": "1.2 A",
+    "MPCB": "GV2ME01",
+    "Contactor (Siemens)": "3TF30 10-0A",
+    "Contactor (ABB)": "A9-30-10",
+    "Contactor (L&T)": "MNX-9",
+    "Cable (Cu)": "1.5 sqmm",
+    "Cable (Al)": "2.5 sqmm",
+    "Cable Gland": "20 mm",
+    "MCCB": "16A",
+    "DE Bearing (ABB)": "6202",
+    "NDE Bearing (ABB)": "6202",
+    "DE Bearing (Siemens)": "6202",
+    "NDE Bearing (Siemens)": "6202"
+  },
+  "0.75": {
+    "HP": "1",
+    "FLC": "1.6 A",
+    "MPCB": "GV2ME02",
+    "Contactor (Siemens)": "3TF30 10-0A",
+    "Contactor (ABB)": "A9-30-10",
+    "Contactor (L&T)": "MNX-9",
+    "Cable (Cu)": "1.5 sqmm",
+    "Cable (Al)": "2.5 sqmm",
+    "Cable Gland": "20 mm",
+    "MCCB": "20A",
+    "DE Bearing (ABB)": "6203",
+    "NDE Bearing (ABB)": "6203",
+    "DE Bearing (Siemens)": "6203",
+    "NDE Bearing (Siemens)": "6203"
+  }
+}
