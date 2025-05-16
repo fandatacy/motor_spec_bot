@@ -1,68 +1,88 @@
-import csv
 from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler
+from flask import Flask, request
+import asyncio
 
-BOT_TOKEN = "7885279501:AAFzKMmLZ6JLzpQHOuSKlE8SMsXN5pykz8k"  # Replace with your real bot token
+# === Replace this with your actual bot token ===
+BOT_TOKEN = "7885279501:AAFzKMmLZ6JLzpQHOuSKlE8SMsXN5pykz8k"
 
-motor_data = {}
+WEBHOOK_PATH = "/webhook"
+WEBHOOK_URL = "https://your-app-name.up.railway.app" + WEBHOOK_PATH  # Replace with Railway URL
 
-# Load CSV data into dictionary
-with open('data.csv', newline='') as csvfile:
-    reader = csv.DictReader(csvfile)
-    for row in reader:
-        kw = float(row['kW'])
-        motor_data[kw] = row
+app = Flask(__name__)
 
-def find_closest_kw(input_kw):
-    kws = sorted(motor_data.keys())
-    closest = min(kws, key=lambda x: abs(x - input_kw))
-    return closest
+telegram_app = ApplicationBuilder().token(BOT_TOKEN).build()
 
-async def motor_info(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not context.args:
-        await update.message.reply_text("Please provide motor kW. Example: /motor 7.5")
-        return
+# === Handlers ===
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Welcome! Send me motor kW (e.g., 5.5) to get motor data.")
 
+async def help_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Send me a motor size (e.g., 22) in kW.")
+
+async def motor_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
-        input_kw = float(context.args[0])
+        kw = float(update.message.text.strip())
     except ValueError:
-        await update.message.reply_text("Invalid input. Please enter a valid motor kW number.")
+        await update.message.reply_text("Please send a valid number (e.g., 5.5)")
         return
 
-    closest_kw = find_closest_kw(input_kw)
-    data = motor_data[closest_kw]
+    # Dummy logic — replace with real data or formula
+    response = f"""
+Motor Details for {kw} kW
 
-    reply = f"""Motor Details for {data['kW']} kW
-
-Horsepower (HP): {data['HP']}
-Full Load Current (Star): {data['FLC_star']} A
-Full Load Current (Delta): {data['FLC_delta']} A
+Horsepower (HP): {kw * 1.341}
+Full Load Current (Star): {round(kw * 1.8, 2)} A
+Full Load Current (Delta): {round(kw * 3.1, 2)} A
 
 MPCB Ratings:
- - Primary: {data['MPCB_primary']}
- - Next: {data['MPCB_next']}
+- ABB: GV2ME{int(kw * 3)}
+- Siemens: 3RV2011-{int(kw * 2)}
+- L&T: MU-G{int(kw * 2)}
 
-Contactor (Model & Amp):
- - Siemens: {data['Contactor_Siemens']} ({data['Contactor_Siemens_amp']}A)
- - ABB: {data['Contactor_ABB']} ({data['Contactor_ABB_amp']}A)
- - L&T: {data['Contactor_LT']} ({data['Contactor_LT_amp']}A)
+Contactor:
+- ABB: AF{int(kw * 2)}-30-10
+- Siemens: 3RT2{int(kw * 1.5)}
+- L&T: MNX-{int(kw * 2)}
 
-MCCB: {data['MCCB']}
+MCCB: S203-C{int(kw * 4)}
+Cable Sizes:
+- Al: 4C x {int(kw * 1.2)} mm²
+- Cu: 4C x {int(kw * 1)} mm²
+Gland: 25 mm
 
-Cable Size:
- - Aluminum: {data['Cable_Al']}
- - Copper: {data['Cable_Cu']}
+Bearings:
+- ABB: DE - 6206 | NDE - 6205
+- Siemens: DE - 6206-ZZ | NDE - 6205-ZZ
+    """
+    await update.message.reply_text(response)
 
-Cable Gland Size: {data['Cable_Gland']}
+# Register handlers
+telegram_app.add_handler(CommandHandler("start", start))
+telegram_app.add_handler(CommandHandler("help", help_cmd))
+telegram_app.add_handler(CommandHandler("", motor_data))
 
-Bearing Numbers:
- - DE (ABB): {data['Bearing_DE_ABB']} | NDE (ABB): {data['Bearing_NDE_ABB']}
- - DE (Siemens): {data['Bearing_DE_Siemens']} | NDE (Siemens): {data['Bearing_NDE_Siemens']}
-"""
-    await update.message.reply_text(reply)
+# === Webhook Setup ===
+@app.route(WEBHOOK_PATH, methods=["POST"])
+async def webhook():
+    await telegram_app.update_queue.put(Update.de_json(request.get_json(force=True), telegram_app.bot))
+    return "OK"
 
-if __name__ == '__main__':
-    app = ApplicationBuilder().token(BOT_TOKEN).build()
-    app.add_handler(CommandHandler("motor", motor_info))
-    print("Bot started...")
-    app.run_polling()
+@app.route("/", methods=["GET"])
+def index():
+    return "Bot is running!"
+
+async def set_webhook():
+    await telegram_app.bot.set_webhook(WEBHOOK_URL)
+
+def start_bot():
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(set_webhook())
+    telegram_app.run_webhook(
+        listen="0.0.0.0",
+        port=int(os.environ.get("PORT", 8080)),
+        webhook_path=WEBHOOK_PATH
+    )
+
+if __name__ == "__main__":
+    start_bot()
