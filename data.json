@@ -4,42 +4,15 @@
     "flc_star": "1.2",
     "flc_delta": "2.1",
     "mpcb": {
-      "abb": {
-        "recommend": "MS116-2.5",
-        "range": "1.6-2.5A"
-      },
-      "siemens": {
-        "recommend": "3RV1011-1DA10",
-        "range": "1.6-2.5A"
-      },
-      "lt": {
-        "recommend": "SS94102",
-        "range": "1.6-2.5A"
-      },
-      "schneider": {
-        "recommend": "GV2ME06",
-        "range": "1.6-2.5A"
-      }
+      "schneider": "GV2ME06"
     },
     "contactor": {
-      "abb": {
-        "recommend": "AF09-30-01",
-        "amp": "9"
-      },
-      "siemens": {
-        "recommend": "3RT1015-1AB40",
-        "amp": "9"
-      },
-      "lt": {
-        "recommend": "MNX-09",
-        "amp": "9"
-      }
+      "siemens": "3RT1015-1AB40",
+      "abb": "AF09-30-01",
+      "lt": "MNX-09"
     },
     "mccb": {
-      "abb": "S201-C6",
-      "siemens": "3VL1716-5ED33-0AA0",
-      "lt": "DXB-06",
-      "schneider": "iC60N 6A"
+      "abb": "S201-C6"
     },
     "cable": {
       "al": "4C x 1.5 mm²",
@@ -58,42 +31,15 @@
     "flc_star": "10.2",
     "flc_delta": "17.6",
     "mpcb": {
-      "abb": {
-        "recommend": "MS132-16",
-        "range": "10-16A"
-      },
-      "siemens": {
-        "recommend": "3RV2021-4DA10",
-        "range": "10-16A"
-      },
-      "lt": {
-        "recommend": "SS94116",
-        "range": "10-16A"
-      },
-      "schneider": {
-        "recommend": "GV2ME20",
-        "range": "10-16A"
-      }
+      "schneider": "GV2ME20"
     },
     "contactor": {
-      "abb": {
-        "recommend": "AF09-30-10",
-        "amp": "9"
-      },
-      "siemens": {
-        "recommend": "3RT2026-1BB40",
-        "amp": "12"
-      },
-      "lt": {
-        "recommend": "MNX-18",
-        "amp": "18"
-      }
+      "siemens": "3RT2026-1BB40",
+      "abb": "AF09-30-10",
+      "lt": "MNX-18"
     },
     "mccb": {
-      "abb": "S203-C20",
-      "siemens": "3VL1716-5ED33-0AA0",
-      "lt": "DXB-20",
-      "schneider": "iC60N 20A"
+      "abb": "S203-C20"
     },
     "cable": {
       "al": "4C x 6 mm²",
