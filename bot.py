@@ -1,78 +1,68 @@
-import json
+import csv
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
-BOT_TOKEN = "7885279501:AAEaFgFlPVie986wExCO-8LEaljYcjECuyM"
+BOT_TOKEN = "7885279501:AAFzKMmLZ6JLzpQHOuSKlE8SMsXN5pykz8k"  # Replace with your real bot token
 
-with open("data.json") as f:
-    motor_data = json.load(f)
+motor_data = {}
 
-def normalize_kw(input_str):
-    try:
-        num = float(input_str)
-        if num.is_integer():
-            return str(int(num))
-        return "{0:.10f}".format(num).rstrip('0').rstrip('.')
-    except ValueError:
-        return None
+# Load CSV data into dictionary
+with open('data.csv', newline='') as csvfile:
+    reader = csv.DictReader(csvfile)
+    for row in reader:
+        kw = float(row['kW'])
+        motor_data[kw] = row
 
-def format_motor_info(data, kw):
-    return f"""
-⚡ *Motor Details for {kw} kW* ⚡
-
-🏷️ *Horsepower (HP):* `{data["hp"]}`
-⚡ *Full Load Current:*
-   - Star: `{data["flc_star"]} A`
-   - Delta: `{data["flc_delta"]} A`
-
-🔧 *Protection Devices:*
-   - MPCB Rating: `{data["mpcb"]["schneider"]}`
-   - MCCB: `{data["mccb"]["abb"]}`
-
-🔌 *Contactor:*
-   - Siemens: `{data["contactor"]["siemens"]}`
-   - ABB: `{data["contactor"]["abb"]}`
-   - L&T: `{data["contactor"]["lt"]}`
-
-🔗 *Cable Size:*
-   - Aluminium: `{data["cable"]["al"]}`
-   - Copper: `{data["cable"]["cu"]}`
-   - Gland Size: `{data["cable_gland"]}`
-
-🛠️ *Bearing Numbers:*
-   - ABB: 
-     - DE: `{data["bearing"]["abb_de"]}`
-     - NDE: `{data["bearing"]["abb_nde"]}`
-   - Siemens: 
-     - DE: `{data["bearing"]["siemens_de"]}`
-     - NDE: `{data["bearing"]["siemens_nde"]}`
-
-📌 *Note:* All ratings are recommendations. Verify with actual load conditions.
-"""
+def find_closest_kw(input_kw):
+    kws = sorted(motor_data.keys())
+    closest = min(kws, key=lambda x: abs(x - input_kw))
+    return closest
 
 async def motor_info(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not context.args:
-        await update.message.reply_text("🔍 Please provide motor kW. Example: /motor 5.5")
+        await update.message.reply_text("Please provide motor kW. Example: /motor 7.5")
         return
 
-    kw_input = context.args[0]
-    normalized_kw = normalize_kw(kw_input)
-
-    if normalized_kw is None:
-        await update.message.reply_text("❌ Invalid input. Please use a number (e.g., /motor 5.5)")
+    try:
+        input_kw = float(context.args[0])
+    except ValueError:
+        await update.message.reply_text("Invalid input. Please enter a valid motor kW number.")
         return
 
-    data = motor_data.get(normalized_kw)
-    if data:
-        reply = format_motor_info(data, normalized_kw)
-        await update.message.reply_text(reply, parse_mode="Markdown")
-    else:
-        await update.message.reply_text(
-            f"⚠️ Data Will Available Soon for {normalized_kw} kW\n\n"
-            f"Currently available sizes: {', '.join(sorted(motor_data.keys()))}",
-            parse_mode="Markdown"
-        )
+    closest_kw = find_closest_kw(input_kw)
+    data = motor_data[closest_kw]
 
-app = ApplicationBuilder().token(BOT_TOKEN).build()
-app.add_handler(CommandHandler("motor", motor_info))
-app.run_polling()
+    reply = f"""Motor Details for {data['kW']} kW
+
+Horsepower (HP): {data['HP']}
+Full Load Current (Star): {data['FLC_star']} A
+Full Load Current (Delta): {data['FLC_delta']} A
+
+MPCB Ratings:
+ - Primary: {data['MPCB_primary']}
+ - Next: {data['MPCB_next']}
+
+Contactor (Model & Amp):
+ - Siemens: {data['Contactor_Siemens']} ({data['Contactor_Siemens_amp']}A)
+ - ABB: {data['Contactor_ABB']} ({data['Contactor_ABB_amp']}A)
+ - L&T: {data['Contactor_LT']} ({data['Contactor_LT_amp']}A)
+
+MCCB: {data['MCCB']}
+
+Cable Size:
+ - Aluminum: {data['Cable_Al']}
+ - Copper: {data['Cable_Cu']}
+
+Cable Gland Size: {data['Cable_Gland']}
+
+Bearing Numbers:
+ - DE (ABB): {data['Bearing_DE_ABB']} | NDE (ABB): {data['Bearing_NDE_ABB']}
+ - DE (Siemens): {data['Bearing_DE_Siemens']} | NDE (Siemens): {data['Bearing_NDE_Siemens']}
+"""
+    await update.message.reply_text(reply)
+
+if __name__ == '__main__':
+    app = ApplicationBuilder().token(BOT_TOKEN).build()
+    app.add_handler(CommandHandler("motor", motor_info))
+    print("Bot started...")
+    app.run_polling()
