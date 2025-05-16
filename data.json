@@ -1,0 +1,27 @@
+{
+    "5.5": {
+        "HP": "7.5",
+        "FLC_Star": "10.2",
+        "FLC_Delta": "17.6",
+        "MPCB": "GV2ME20",
+        "Contactor": {
+            "Siemens": "3RT2026-1BB40",
+            "ABB": "AF09-30-10",
+            "L&T": "MNX-18"
+        },
+        "MCCB": "ABB S203-C20",
+        "Cable_Al": "4C x 6 mm\u00b2",
+        "Cable_Cu": "4C x 4 mm\u00b2",
+        "Cable_Gland": "25 mm",
+        "Bearing": {
+            "ABB": {
+                "DE": "6205",
+                "NDE": "6204"
+            },
+            "Siemens": {
+                "DE": "6205-ZZ",
+                "NDE": "6204-ZZ"
+            }
+        }
+    }
+}
