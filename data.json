@@ -1,43 +1,110 @@
 {
-    "0.37": {
-        "kW": "0.37",
-        "HP": "0.5",
-        "FLC_Star": "1.2 A",
-        "FLC_Delta": "2.1 A",
-        "MPCB": {
-            "Primary": {
-                "ABB": "MS132-1.6 (1.0-1.6A)",
-                "Siemens": "3RV2011-1DA10 (1.0-1.6A)",
-                "L&T": "MS16 (1.0-1.6A)",
-                "Schneider": "GV2ME02 (1.0-1.6A)"
-            },
-            "Next": {
-                "ABB": "MS132-2.5 (1.6-2.5A)",
-                "Siemens": "3RV2011-1EA10 (1.6-2.5A)",
-                "L&T": "MS16 (1.6-2.5A)",
-                "Schneider": "GV2ME03 (1.6-2.5A)"
-            }
-        },
-        "Contactor": {
-            "ABB": "AF09-30-10 (9A)",
-            "Siemens": "3RT2015-1BB41 (9A)",
-            "L&T": "MNX-9 (9A)"
-        },
-        "MCCB": "ABB S203-C06",
-        "Cable": {
-            "Al": "4C x 1.5 mm\u00b2",
-            "Cu": "4C x 1.0 mm\u00b2"
-        },
-        "Cable_Gland": "20 mm",
-        "Bearing": {
-            "ABB": {
-                "DE": "6201",
-                "NDE": "6201"
-            },
-            "Siemens": {
-                "DE": "6201-ZZ",
-                "NDE": "6201-ZZ"
-            }
-        }
+  "0.37": {
+    "hp": "0.5",
+    "flc_star": "1.2",
+    "flc_delta": "2.1",
+    "mpcb": {
+      "abb": {
+        "recommend": "MS116-2.5",
+        "range": "1.6-2.5A"
+      },
+      "siemens": {
+        "recommend": "3RV1011-1DA10",
+        "range": "1.6-2.5A"
+      },
+      "lt": {
+        "recommend": "SS94102",
+        "range": "1.6-2.5A"
+      },
+      "schneider": {
+        "recommend": "GV2ME06",
+        "range": "1.6-2.5A"
+      }
+    },
+    "contactor": {
+      "abb": {
+        "recommend": "AF09-30-01",
+        "amp": "9"
+      },
+      "siemens": {
+        "recommend": "3RT1015-1AB40",
+        "amp": "9"
+      },
+      "lt": {
+        "recommend": "MNX-09",
+        "amp": "9"
+      }
+    },
+    "mccb": {
+      "abb": "S201-C6",
+      "siemens": "3VL1716-5ED33-0AA0",
+      "lt": "DXB-06",
+      "schneider": "iC60N 6A"
+    },
+    "cable": {
+      "al": "4C x 1.5 mm²",
+      "cu": "4C x 1.5 mm²"
+    },
+    "cable_gland": "15 mm",
+    "bearing": {
+      "abb_de": "6202",
+      "abb_nde": "6201",
+      "siemens_de": "6202-ZZ",
+      "siemens_nde": "6201-ZZ"
     }
+  },
+  "5.5": {
+    "hp": "7.5",
+    "flc_star": "10.2",
+    "flc_delta": "17.6",
+    "mpcb": {
+      "abb": {
+        "recommend": "MS132-16",
+        "range": "10-16A"
+      },
+      "siemens": {
+        "recommend": "3RV2021-4DA10",
+        "range": "10-16A"
+      },
+      "lt": {
+        "recommend": "SS94116",
+        "range": "10-16A"
+      },
+      "schneider": {
+        "recommend": "GV2ME20",
+        "range": "10-16A"
+      }
+    },
+    "contactor": {
+      "abb": {
+        "recommend": "AF09-30-10",
+        "amp": "9"
+      },
+      "siemens": {
+        "recommend": "3RT2026-1BB40",
+        "amp": "12"
+      },
+      "lt": {
+        "recommend": "MNX-18",
+        "amp": "18"
+      }
+    },
+    "mccb": {
+      "abb": "S203-C20",
+      "siemens": "3VL1716-5ED33-0AA0",
+      "lt": "DXB-20",
+      "schneider": "iC60N 20A"
+    },
+    "cable": {
+      "al": "4C x 6 mm²",
+      "cu": "4C x 4 mm²"
+    },
+    "cable_gland": "25 mm",
+    "bearing": {
+      "abb_de": "6205",
+      "abb_nde": "6204",
+      "siemens_de": "6205-ZZ",
+      "siemens_nde": "6204-ZZ"
+    }
+  }
 }
