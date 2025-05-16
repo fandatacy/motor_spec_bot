@@ -1,0 +1,80 @@
+[
+  {
+    "kW": 0.37,
+    "HP": 0.5,
+    "FLC": 1.0,
+    "MPCB": {
+      "Schneider": "GV2-ME02 (0.4\u20130.63 A)",
+      "Siemens": "3RV2011-0AA10 (0.28\u20130.4 A)",
+      "ABB": "MS116-0.63 (0.4\u20130.63 A)",
+      "L&T": "MU-G10 (0.4\u20130.63 A)",
+      "NextSizes": {
+        "Schneider": "GV2-ME03 (0.63\u20131 A)",
+        "Siemens": "3RV2011-0BA10 (0.4\u20130.63 A)",
+        "ABB": "MS116-1 (0.63\u20131 A)",
+        "L&T": "MU-G10 (0.63\u20131 A)"
+      }
+    },
+    "Contactor": {
+      "Schneider": "LC1K0601P7 (6A)",
+      "Siemens": "3RT2015-1AP01 (6A)",
+      "ABB": "A9-30-10 (9A)",
+      "L&T": "MNX-9 (9A)"
+    },
+    "Cable": {
+      "Aluminium": "2.5 mm\u00b2",
+      "Copper": "1.5 mm\u00b2"
+    },
+    "Gland": "20 mm",
+    "Bearing": {
+      "ABB": {
+        "DE": "6202",
+        "NDE": "6202"
+      },
+      "Siemens": {
+        "DE": "6202",
+        "NDE": "6202"
+      }
+    },
+    "MCCB": "C Curve 6A"
+  },
+  {
+    "kW": 5.5,
+    "HP": 7.5,
+    "FLC": 11.2,
+    "MPCB": {
+      "Schneider": "GV2-ME16 (9\u201314 A)",
+      "Siemens": "3RV2021-4KA10 (10\u201316 A)",
+      "ABB": "MS116-16 (10\u201316 A)",
+      "L&T": "MU-G20 (10\u201316 A)",
+      "NextSizes": {
+        "Schneider": "GV2-ME21 (13\u201318 A)",
+        "Siemens": "3RV2021-4JA10 (13\u201318 A)",
+        "ABB": "MS116-18 (13\u201318 A)",
+        "L&T": "MU-G20 (13\u201318 A)"
+      }
+    },
+    "Contactor": {
+      "Schneider": "LC1D18M7 (18A)",
+      "Siemens": "3RT2026-1AP00 (18A)",
+      "ABB": "A16-30-10 (16A)",
+      "L&T": "MNX-18 (18A)"
+    },
+    "Cable": {
+      "Aluminium": "6 mm\u00b2",
+      "Copper": "4 mm\u00b2"
+    },
+    "Gland": "25 mm",
+    "Bearing": {
+      "ABB": {
+        "DE": "6205",
+        "NDE": "6204"
+      },
+      "Siemens": {
+        "DE": "6205",
+        "NDE": "6204"
+      }
+    },
+    "MCCB": "C Curve 16A"
+  }
+]
