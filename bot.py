@@ -1,49 +1,62 @@
 import json
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+
 BOT_TOKEN = "7885279501:AAFU7y-RsZ9S3OGNp1ekh1KIX1fBibbtchI"
 
 with open("data.json") as f:
     motor_data = json.load(f)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Welcome to MotorBot! Enter motor kW value (e.g., 5.5) to get full details.")
+    await update.message.reply_text("Welcome! Send me a motor kW value (e.g., 5.5) to get specifications.")
 
-async def motor_info(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def get_motor_details(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
-        kw = update.message.text.strip()
-        data = motor_data.get(kw)
-        if not data:
-            await update.message.reply_text("Motor kW not found in database. Please try another value.")
-            return
+        kW = float(update.message.text.strip())
+    except ValueError:
+        await update.message.reply_text("Please enter a valid motor kW value.")
+        return
 
-        text = f"**Motor Selection for {data['kW']} ({data['HP']})**\n"
-        text += f"**Voltage:** 415V\n"
-        text += f"**Full Load Current:**\n  • Star: {data['FLC_Star']}\n  • Delta: {data['FLC_Delta']}\n\n"
+    str_kW = f"{kW:.2f}"
+    if str_kW in motor_data:
+        data = motor_data[str_kW]
+        reply = f"""
+<b>Motor Size:</b> {str_kW} kW
 
-        text += "**MPCB Ratings:**\n"
-        for brand, details in data["MPCB"].items():
-            text += f"  • {brand}: {details['Model']} ({details['Range']}) | Next: {details['Next Size']}\n"
+<b>HP:</b> {data["hp"]}
 
-        text += "\n**Contactor Ratings:**\n"
-        for brand, model in data["Contactor"].items():
-            text += f"  • {brand}: {model}\n"
+<b>Full Load Current (Star):</b> {data["flc_star"]} A
+<b>Full Load Current (Delta):</b> {data["flc_delta"]} A
 
-        text += f"\n**MCCB:** {data['MCCB']}\n"
+<b>Contactors:</b>
+- Siemens: {data["contactor"]["siemens"]}
+- ABB: {data["contactor"]["abb"]}
+- L&T: {data["contactor"]["lt"]}
 
-        text += f"\n**Cable Size:**\n  • Aluminum: {data['Cable']['Aluminum']}\n  • Copper: {data['Cable']['Copper']}\n"
-        text += f"**Cable Gland Size:** {data['Cable_Gland']}\n"
+<b>MPCB:</b>
+- Siemens: {data["mpcb"]["siemens"]} (Next: {data["mpcb"]["siemens_next"]})
+- ABB: {data["mpcb"]["abb"]} (Next: {data["mpcb"]["abb_next"]})
+- L&T: {data["mpcb"]["lt"]} (Next: {data["mpcb"]["lt_next"]})
+- Schneider: {data["mpcb"]["schneider"]} (Next: {data["mpcb"]["schneider_next"]})
 
-        text += "\n**Bearing Numbers:**\n"
-        for brand, bearings in data["Bearing"].items():
-            text += f"  • {brand}: DE - {bearings['DE']}, NDE - {bearings['NDE']}\n"
+<b>Cable Size:</b>
+- Copper: {data["cable"]["copper"]}
+- Aluminium: {data["cable"]["aluminium"]}
 
-        await update.message.reply_text(text, parse_mode='Markdown')
-    except Exception as e:
-        await update.message.reply_text("Error: " + str(e))
+<b>Cable Gland:</b> {data["cable_gland"]}
 
-app = ApplicationBuilder().token("REPLACE_YOUR_BOT_TOKEN_HERE").build()
-app.add_handler(CommandHandler("start", start))
-app.add_handler(CommandHandler("help", start))
-app.add_handler(CommandHandler("", motor_info))
-app.run_polling()
+<b>Bearings:</b>
+- DE: {data["bearing"]["de"]}
+- NDE: {data["bearing"]["nde"]}
+""".strip()
+        await update.message.reply_text(reply, parse_mode='HTML')
+    else:
+        await update.message.reply_text("Motor kW not found in database. Please try another value.")
+
+if __name__ == "__main__":
+    app = ApplicationBuilder().token(BOT_TOKEN).build()
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("help", start))
+    app.add_handler(CommandHandler("kw", get_motor_details))
+    app.add_handler(MessageHandler(None, get_motor_details))
+    app.run_polling()
