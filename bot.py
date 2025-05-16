@@ -1,70 +1,49 @@
 import json
 from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
+from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, filters
 
-# Replace this with your actual token
 BOT_TOKEN = "7885279501:AAFU7y-RsZ9S3OGNp1ekh1KIX1fBibbtchI"
 
 # Load motor data
 with open("data.json") as f:
     motor_data = json.load(f)
 
-# Format reply for Telegram
-def format_motor_info(data):
-    return (
-        f"<b>Motor kW:</b> {data['kW']} kW\n"
-        f"<b>HP:</b> {data['HP']}\n"
-        f"<b>FLC (Star):</b> {data['FLC_Star']} A\n"
-        f"<b>FLC (Delta):</b> {data['FLC_Delta']} A\n"
-        f"<b>MPCB (Tyses V2):</b> {data['MPCB_Tyses_V2']}\n"
-        f"<b>MPCB (Tyses V3):</b> {data['MPCB_Tyses_V3']}\n"
-        f"<b>Contactor:</b>\n"
-        f"  - Siemens: {data['Contactor_Siemens']}\n"
-        f"  - ABB: {data['Contactor_ABB']}\n"
-        f"  - L&T: {data['Contactor_L&T']}\n"
-        f"<b>MCCB:</b> {data['MCCB']}\n"
-        f"<b>Cable Size:</b>\n"
-        f"  - Copper: {data['Cable_Copper']}\n"
-        f"  - Aluminium: {data['Cable_Aluminium']}\n"
-        f"<b>Cable Gland:</b> {data['Cable_Gland']}\n"
-        f"<b>Bearings:</b>\n"
-        f"  - DE: {data['Bearing_DE']}\n"
-        f"  - NDE: {data['Bearing_NDE']}"
-    )
-
-# /start and /help command
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(
-        "Welcome to the Motor Selector Bot!\n\n"
-        "Send me a motor kW value (e.g., 5.5) and I’ll give you full specs!",
-    )
-
-# Handler for motor data query
-async def get_motor_details(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    kW_input = update.message.text.strip()
-    try:
-        kW = float(kW_input)
-    except ValueError:
-        await update.message.reply_text("Please enter a valid number (e.g., 5.5 or 22).")
-        return
-
-    # Match with rounding if exact key not found
-    kW_str = str(round(kW, 2))
-    result = motor_data.get(kW_str)
-    if result:
-        reply = format_motor_info(result)
-        await update.message.reply_text(reply, parse_mode="HTML")
+# Function to fetch and format motor details
+def get_motor_info(kW):
+    kW = str(round(float(kW), 2))  # round to 2 decimals for matching
+    if kW in motor_data:
+        data = motor_data[kW]
+        reply = f"**Motor Details for {kW} kW**\n\n"
+        reply += f"**HP**: {data['HP']}\n"
+        reply += f"**FLC (Star)**: {data['FLC_Star']} A\n"
+        reply += f"**FLC (Delta)**: {data['FLC_Delta']} A\n"
+        reply += f"**MPCB (Tyses V2)**: {data['MPCB_V2']}\n"
+        reply += f"**MPCB (Tyses V3)**: {data['MPCB_V3']}\n"
+        reply += f"**Contactor (ABB)**: {data['Contactor_ABB']}\n"
+        reply += f"**Contactor (Siemens)**: {data['Contactor_Siemens']}\n"
+        reply += f"**Contactor (L&T)**: {data['Contactor_L&T']}\n"
+        reply += f"**MCCB Rating**: {data['MCCB']}\n"
+        reply += f"**Cable (Cu Armoured)**: {data['Cable_Cu']}\n"
+        reply += f"**Cable (Al Armoured)**: {data['Cable_Al']}\n"
+        reply += f"**Cable Gland Size**: {data['Cable_Gland']}\n"
+        reply += f"**Bearing (ABB)**:\n- DE: {data['Bearing_ABB_DE']}\n- NDE: {data['Bearing_ABB_NDE']}\n"
+        reply += f"**Bearing (Siemens)**:\n- DE: {data['Bearing_Siemens_DE']}\n- NDE: {data['Bearing_Siemens_NDE']}\n"
+        return reply
     else:
-        await update.message.reply_text("Motor kW not found in database. Please try another value.")
+        return "Motor kW not found in database. Please try another value (e.g., 5.5 or 7.5)."
 
-# App init
+# Handler for incoming text
+async def get_motor_details(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    try:
+        kW_text = update.message.text.strip().lower().replace("kw", "").strip()
+        reply = get_motor_info(kW_text)
+    except Exception:
+        reply = "Please enter a valid motor kW value like `5.5` or `7.5`."
+    await update.message.reply_text(reply, parse_mode="Markdown")
+
+# Main bot setup
 app = ApplicationBuilder().token(BOT_TOKEN).build()
-
-# Command and message handlers
-app.add_handler(CommandHandler("start", start))
-app.add_handler(CommandHandler("help", start))
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, get_motor_details))
 
-# Run the bot
-print("Bot is running...")
-app.run_polling()
+if __name__ == "__main__":
+    app.run_polling()
