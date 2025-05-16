@@ -3,7 +3,7 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 
 # Replace this with your actual bot token
-BOT_TOKEN = os.getenv("BOT_TOKEN", "YOUR_BOT_TOKEN_HERE")
+BOT_TOKEN = os.getenv("BOT_TOKEN", "7885279501:AAFU7y-RsZ9S3OGNp1ekh1KIX1fBibbtchI")
 
 # Dummy example motor data for demonstration
 motor_data = {
