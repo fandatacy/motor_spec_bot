@@ -4,7 +4,7 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 
 # Replace 'YOUR_BOT_TOKEN' with your actual Telegram Bot Token
-BOT_TOKEN = "YOUR_BOT_TOKEN"
+BOT_TOKEN = "7885279501:AAHM88TmaaotUUcpIpG-nJZhSMkydYIr62I"
 
 # Load motor data from CSV into a dictionary
 motor_data = {}
